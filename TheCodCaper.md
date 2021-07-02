@@ -123,7 +123,7 @@ When I combined the given flags with the given IP address (*gobuster dir -u `<GI
 
 &nbsp; 
 
-*Based off the output `administrator.php` semms to be an important file that would contain valuable information that could be exploited.*
+*Based off the output `administrator.php` seems to be an important file that would contain valuable information that could be exploited.*
 
 
 
@@ -194,12 +194,42 @@ I used  *curl -s --data-urlencode "cmd=cat /etc/passwd" -X POST http://`PROVIDED
 
 As you can see *"Pingu"* is still listed as an account.
 
+## What is my SSH password? ##
+
+So we figured out that Pingu still has an account. Now, we have to figure out the associated password. To do this we will need to use the `find` command to search through all of the files owned by Pingu.  My first thought was to use the `find` command to search for any shadow files may contain passwords. *find / 2>>/dev/null | grep -i shadow*.
+
+&nbsp;  
+
+![image](https://user-images.githubusercontent.com/61631671/124201492-385d5880-daa6-11eb-928d-bdeddd53a7b4.png)
+
+&nbsp; 
+
+I found a backup shadow directory! Lets use `cat` to see the contents! 
+
+&nbsp;  
+
+![image](https://user-images.githubusercontent.com/61631671/124201783-e0732180-daa6-11eb-8fd2-77472fd13047.png)
+
+&nbsp;  
+
+This didn't help. Next, I used the `find` command to search any content containing "pass" *find / 2>>/dev/null | grep -i pass* (I switched to the webpage interface for this one ) This is what populates:
+
+&nbsp;  
+
+![image](https://user-images.githubusercontent.com/61631671/124203527-e9fe8880-daaa-11eb-90e1-5c11a4d4e6a6.png)
+
+&nbsp;  
+
+`/var/hidden/pass`! Let's `cat` into this directory. 
+
+&nbsp;  
 
 
+![image](https://user-images.githubusercontent.com/61631671/124203713-57121e00-daab-11eb-97de-c2824f3f90f5.png)
 
+We found the password `pinguapingu`!
 
-
-
+&nbsp;  
 
 ## *References* ##
 
@@ -210,6 +240,82 @@ As you can see *"Pingu"* is still listed as an account.
 [Python - Reverse Shell](http://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet)
 &nbsp;  
 [curl](https://www.tutorialspoint.com/unix_commands/curl.htm)
+
+
+
+# [ Task 6 - LinEnum ] #
+
+In this task the objective is to use LinEnum to download LinEnum and use it for priviledge escalation. 
+First, I used ssh and the login information obtained from the previous task to login as Pingu. *ssh pingu@`<GIVEN IP ADDRESS>` 
+
+Next I used the function *find /  -perm -u=s -type f 2>/dev/null* to locate the SUID which gace me this: 
+
+![image](https://user-images.githubusercontent.com/61631671/124210166-f5f14700-dab8-11eb-9a0c-9b0c67768587.png)
+
+&nbsp; 
+
+A *secret* path? Sounds very interesting to me! `/opt/secret/root`
+
+## *Reference* ##
+
+[LinEnum](https://en.kali.tools/all/?tool=757)
+[SUID](https://www.redhat.com/sysadmin/suid-sgid-sticky-bit)
+
+## *The next few tasks go over tools that can be used to carry out "Binary Exploitation". Everyone has their own way of doing things so various exploitation methods are explained. There are no tasks to be completed but there is a lot of information to retain and use for hte final tasks.* ##
+
+
+# [ Task 7 - pwndbg ] #
+
+*No answer needed*
+
+# [ Task 8 -  Binary-Exploitaion: Manually ] #
+
+*No answer needed*
+
+## *Reference* ##
+
+[Disassemble Shell](https://visualgdb.com/gdbreference/commands/disassemble)
+
+# [ Task 9 - Binary Exploitation: The pwntools way ] #
+
+*No answer needed*
+
+## *Reference* ##
+
+[pwnTools](https://python3-pwntools.readthedocs.io/en/latest/)
+
+# [ Task 10 - Finishing The Job ] # 
+
+This task requires us to crack the root hash using the hash we received from the previous task `$6$rFK4s/vE$zkh2/RBiRZ746OW3/Q/zqTRVfrfYJfFjFc2/q.oYtoF1KglS3YWoExtT3cvA3ml9UtDS8PFzCk902AsWx00Ck.`It is recommended that we use the following  `hashcat {flags} {hashfile} {wordlist}` with the following flags : 
+
+
+
+I copied the hash and saved it as a *llama.txt*. Now I am going to attempt cracking the file using `hashcat -m 0 -a 0 -o llama.txt /usr/share/wordlists/rockyou.txt `. Let's see what we get! *FYI This may take a while*
+
+| Flag | Use |
+| ------------- | ------------- |
+| -a  | Used to specify attack mode  |
+| -m  | Used to specify which mode to use |
+
+&nbsp;  
+
+
+![image](https://user-images.githubusercontent.com/61631671/124213415-81b9a200-dabe-11eb-8a48-2282ab2476ea.png)
+
+
+Got it ! `love2fish `
+
+
+## *References* ##
+
+[Hashcat](https://resources.infosecinstitute.com/topic/hashcat-tutorial-beginners/)
+[Hashcat](https://tools.kali.org/password-attacks/hashcat)
+[Hashcat Modes](https://hashcat.net/wiki/doku.php?id=example_hashes)
+
+
+*This room was a bit difficult for and took me longer than I expected. I spent a lot of time researching various tools and commands that I found myself unfamiliar with. However in the end I completed it which is all that matters!* 
+
+Congratulations on completing The Cod Caper ! 
 
 
 
