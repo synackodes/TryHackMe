@@ -15,7 +15,7 @@ FOREWORD: We all get stuck which is why write-ups exist however, I would suggest
 
 # [ Task 1 - Intro ]
 
-*No answer Needed*
+*No answer needed*
 
 # [ Task 2 - Host Enumeration ]
 
